@@ -1,0 +1,14 @@
+# ninja log v5
+1	73	1653689957258624201	build.ninja	3ea730e15a42513
+2	1601	1653689375400264011	CMakeFiles/yash.dir/src/Job.cpp.o	b5cc171ad16ca8a5
+2	784	1653689536864211934	CMakeFiles/yash.dir/src/Yash.cpp.o	a7020c2d054f659f
+784	843	1653689536925854178	yash	c707ad8d43b4e876
+1	1535	1653689375333926794	CMakeFiles/yash.dir/main.cpp.o	127a834804abee1c
+1	662	1653437043308739106	CMakeFiles/yash.dir/src/utils.cpp.o	eac1d3569149cf41
+2	1169	1653688825747759316	CMakeFiles/yash.dir/src/Process.cpp.o	6ed4243af53d3e7
+2	719	1653689994276123302	CMakeFiles/yash.dir/src/utils.cpp.o	efc21233394efeaa
+1	909	1653689994464250770	CMakeFiles/yash.dir/main.cpp.o	c22bbfb02b1f7f66
+2	971	1653689994526284992	CMakeFiles/yash.dir/src/Process.cpp.o	2ac6a4b24c840a3c
+2	1012	1653689994567795913	CMakeFiles/yash.dir/src/Yash.cpp.o	8ea6e3126159c5b8
+2	1019	1653689994574942591	CMakeFiles/yash.dir/src/Job.cpp.o	638d41adbb12e158
+1019	1081	1653689994640356649	yash	c707ad8d43b4e876
