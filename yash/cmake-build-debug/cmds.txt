@@ -1,5 +1,0 @@
-cat | cat > 1.txt | cat < 2.txt | cat > 3.txt
-
-hello | cat > 2.txt
-
-sleep 3 | sleep 3
