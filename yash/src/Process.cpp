@@ -39,7 +39,7 @@ void Process::addInFile(string& fileName) {
     }
 
     inFileName = fileName;
-    inrd = true;
+    inFile = true;
 }
 
 void Process::addOutFile(string& fileName) {
@@ -56,7 +56,7 @@ void Process::addOutFile(string& fileName) {
     }
 
     outFileName = fileName;
-    outrd = true;
+    outFile = true;
 }
 
 
@@ -78,32 +78,33 @@ std::ostream &operator<<(ostream & out, const Process & p) {
     for(auto arg: p.argv){
         out<<arg<<endl;
     }
-    if(p.inrd) out << "Input:" << p.inFileName << endl;
-    if(p.outrd) out << "Output:" << p.outFileName << endl;
+    if(p.inFile) out << "Input:" << p.inFileName << endl;
+    if(p.outFile) out << "Output:" << p.outFileName << endl;
     return out;
 }
 
 void Process::redirectStreams() {
-    // TODO: add for pipes
 
-    if(inrd) {
+    // If we were given '<' and/or '>', open files
+    if(inFile) {
         if ((infd = open(inFileName.c_str(), O_RDONLY)) == -1) {
             perror("Opening Input File");
+            exit(1);
         }
     }
-    if(outrd){
+    if(outFile){
         if((outfd = open(outFileName.c_str(), O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU | S_IRWXG)) == -1) {
             perror("Opening Output File");
+            exit(1);
         }
     }
 
+    // Can be a File or Pipe
     if(infd != -1){
-        cout<<"Redirecting input to:"<<infd<<endl;
         dup2(infd, STDIN_FILENO);
         close(infd);
     }
     if(outfd != -1){
-        cout<<"Redirecting output to:"<<outfd<<endl;
         dup2(outfd, STDOUT_FILENO);
         close(outfd);
     }

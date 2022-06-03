@@ -21,10 +21,10 @@ enum Command {
 class Process {
 private:
     std::string inFileName {""};
-    bool inrd {false};
+    bool inFile {false};
     int infd {-1};
     std::string outFileName {""};
-    bool outrd {false};
+    bool outFile {false};
     int outfd {-1};
     std::vector<char*> argv;
     bool fail = false; // only set if failure setting up arguments and file redirection

@@ -10,14 +10,17 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <unordered_map>
+#include <map>
 
 
 class Yash {
 private:
-    std::vector<std::unique_ptr<Job>> bgJobs;
+    std::map<int, std::unique_ptr<Job>> bgJobs; // map of Job Number to Job
     std::unique_ptr<Job> currentJob;
+    std::unordered_map<int, int> bgJobPidMap; // Map of pid to job number
     std::string cmd;
-    int maxJobNo {0};
+//    int maxJobNo {0};
 
 
 
@@ -25,13 +28,23 @@ private:
     bool getcmd();
     // Parses command to check if equal to fg, bg, or bgJobs
     void execJob();
+    void checkJobs();
     void parent();
+    Job& getJob(int);
     [[noreturn]]void child(int, int);
     // send current job to background
-    void bgJob();
+    void jobToBG();
+    int getNextJob(bool);
+    void updateStatus(int, int);
     [[noreturn]]void jobsExec();
-    [[noreturn]]void fgExec();
-    [[noreturn]]void bgExec();
+    bool fgExec();
+    void bgExec();
+    void removeBGJob(int);
+
+    void jobExited(int);
+    void jobTerminated(int);
+    void jobStopped(int);
+    void jobContinued(int);
 public:
     Yash();
     void run();

@@ -5,4 +5,5 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(SOURCES include/Yash.h src/Yash.cpp include/utils.h src/utils.cpp src/Job.cpp include/Job.h src/Process.cpp include/Process.h)
 
-add_executable(yash main.cpp ${SOURCES})
+add_library(yash SHARED
+        ${SOURCES})

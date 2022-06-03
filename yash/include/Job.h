@@ -23,7 +23,7 @@ private:
     int pgid {0};
     bool fg {true};
     Status status {RUNNING};
-    int jobNo {0};
+//    int jobNo {0};
     bool next {true}; // If current job or next job for fg
 
 public:
@@ -34,9 +34,15 @@ public:
     void printProcs();
     bool isfg();
     int getpgid();
+//    int getJobNo();
+    Status getStatus();
     void setpg(int, int);
-    void setJobNo(int);
+//    void setJobNo(int);
     void setNext(bool);
+    void setStatus(Status);
+    void setfg(bool);
+    std::string getcmd();
+    void printJob(bool, int);
 
     friend std::ostream& operator << (std::ostream&, const Job&);
 };

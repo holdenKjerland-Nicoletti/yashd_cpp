@@ -64,7 +64,7 @@ void Job::createProcs() {
         }
     }
     procs.push_back(move(proc));
-    printProcs();
+//    printProcs();
 }
 
 void Job::printProcs() {
@@ -77,13 +77,10 @@ void Job::printProcs() {
 }
 
 std::ostream &operator<<(ostream & out, const Job & j) {
-
-    out<<"["<<j.jobNo<<"] "; // ex: [1]
-    out<<((j.next) ? '+': '-'); // + or -1
     out<<" "<< statusmsg(j.status)<<'\t'; // print status
     out<<j.cmd;
-    out<<((!j.fg) ? " &\n" : "\n");
-
+//    out<<((!j.fg) ? " &\n" : "\n");
+    out<<endl;
     return out;
 }
 
@@ -100,10 +97,36 @@ void Job::setpg(int p, int pg) {
     pgid = pg;
 }
 
-void Job::setJobNo(int jn){
-    jobNo = jn;
-}
+//void Job::setJobNo(int jn){
+//    jobNo = jn;
+//}
 
 void Job::setNext(bool n){
     next = n;
+}
+
+void Job::setStatus(Status s) {
+    status = s;
+}
+
+void Job::setfg(bool b) {
+    fg = b;
+}
+
+//int Job::getJobNo() {
+//    return jobNo;
+//}
+
+Status Job::getStatus() {
+    return status;
+}
+
+std::string Job::getcmd() {
+    return cmd;
+}
+
+void Job::printJob(bool plus, int jobNo){
+    cout<<"["<<jobNo<<"] ";
+    cout<<(plus ? '+' : '-')<<"  ";
+    cout<<*this;
 }
