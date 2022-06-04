@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "include/Yash.h"
 
 int main() {

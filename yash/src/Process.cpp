@@ -29,12 +29,10 @@ void Process::addInFile(string& fileName) {
 
     if(fileName.size() == 0 || fileName[0] == '<'){
         cout<<"syntax error near unexpected token `newline'"<<endl;
-        fail = true;
         return;
     }
     if(fileName[0] == '|' || fileName[0] == '>'){
         cout<<"syntax error near unexpected token `"<<fileName[0]<<"'"<<endl;
-        fail = true;
         return;
     }
 
@@ -46,12 +44,10 @@ void Process::addOutFile(string& fileName) {
 
     if(fileName.size() == 0 || fileName[0] == '>'){
         cout<<"syntax error near unexpected token `newline'"<<endl;
-        fail = true;
         return;
     }
     if(fileName[0] == '|' || fileName[0] == '<'){
         cout<<"syntax error near unexpected token `"<<fileName[0]<<"'"<<endl;
-        fail = true;
         return;
     }
 

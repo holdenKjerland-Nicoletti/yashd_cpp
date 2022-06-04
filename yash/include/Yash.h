@@ -20,26 +20,30 @@ private:
     std::unique_ptr<Job> currentJob;
     std::unordered_map<int, int> bgJobPidMap; // Map of pid to job number
     std::string cmd;
-//    int maxJobNo {0};
 
 
-
-    // gets c
     bool getcmd();
-    // Parses command to check if equal to fg, bg, or bgJobs
-    void execJob();
-    void checkJobs();
-    void parent();
-    Job& getJob(int);
-    [[noreturn]]void child(int, int);
-    // send current job to background
-    void jobToBG();
     int getNextJob(bool);
+
+    void checkJobs();
+    void jobToBG();
     void updateStatus(int, int);
+    void removeBGJob(int);
+
+    void parent();
+    [[noreturn]]void child(int, int);
+
+    //The most important function which creates a new job from cmd and executes accordingly
+    void execJob();
+
+    /*For executing built in commands:
+     * jobs
+     * fg
+     * bg
+     */
     [[noreturn]]void jobsExec();
     bool fgExec();
     void bgExec();
-    void removeBGJob(int);
 
     void jobExited(int);
     void jobTerminated(int);

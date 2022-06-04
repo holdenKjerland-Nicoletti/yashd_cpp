@@ -27,9 +27,6 @@ private:
     bool outFile {false};
     int outfd {-1};
     std::vector<char*> argv;
-    bool fail = false; // only set if failure setting up arguments and file redirection
-    int pid;
-    int pgid;
 public:
     Process();
     void addArg(std::string&);

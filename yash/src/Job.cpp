@@ -4,7 +4,6 @@
 
 #include "../include/Job.h"
 
-#include <iostream>
 #include <sstream>
 
 using namespace std;
@@ -97,14 +96,6 @@ void Job::setpg(int p, int pg) {
     pgid = pg;
 }
 
-//void Job::setJobNo(int jn){
-//    jobNo = jn;
-//}
-
-void Job::setNext(bool n){
-    next = n;
-}
-
 void Job::setStatus(Status s) {
     status = s;
 }
@@ -112,10 +103,6 @@ void Job::setStatus(Status s) {
 void Job::setfg(bool b) {
     fg = b;
 }
-
-//int Job::getJobNo() {
-//    return jobNo;
-//}
 
 Status Job::getStatus() {
     return status;

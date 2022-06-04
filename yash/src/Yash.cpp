@@ -63,6 +63,16 @@ bool Yash::getcmd(){
     return (cmd.size() > 0);
 }
 
+
+/* Create a new Job by parsing cmd
+ *
+ * If cmd = fg or bg, execute functions
+ *
+ * Loop through all processes and fork each child process
+ *      Create pipe if needed
+ *      Call child() for each process
+ * Call parent()
+ */
 void Yash::execJob() {
 
     currentJob = unique_ptr<Job> (new Job(cmd));
@@ -87,7 +97,8 @@ void Yash::execJob() {
     int pipefd[2];
 
     for(int i = 0; i < numProcs; i++){
-        // if this is not the last process, create a pipe
+
+        // Create pipe (if not last process)
         if(i != numProcs-1){
             if (pipe(pipefd) == -1) {
                 perror("pipe");
@@ -96,6 +107,7 @@ void Yash::execJob() {
             currentJob->procs[i]->setOutfd(pipefd[1]);
             currentJob->procs[i+1]->setInfd(pipefd[0]);
         }
+
         // --------- Parent -------------
         if((cpid = fork()) > 0){
             // if first child, set child process group id
@@ -136,13 +148,17 @@ void Yash::execJob() {
 }
 
 void Yash::child(int procNum, int pgid){
+
     // Reset signals to the defaults
     signal(SIGINT, SIG_DFL);
     signal(SIGTSTP, SIG_DFL);
 
-    if (procNum == 0) { // if first child, set child process group id
+    // if first child, set child process group id
+    if (procNum == 0) {
         pgid = getpid();
     }
+
+    // Set pgid of children and TC in both parent and child to avoid race condition
     currentJob->setpg(0, pgid);
     if (currentJob->isfg() && tcsetpgrp(STDIN_FILENO, pgid) != 0){
         perror("tcsetpgrp() error in child fg");
@@ -161,28 +177,30 @@ void Yash::child(int procNum, int pgid){
 
 
 void Yash::parent() {
-    int status;
-    int pid = getpid();
-    int cpgid = currentJob->getpgid();
-
-//    cout<<"Parent:"<<pid<<", waiting for:"<<cpgid<<endl;
 
     // if it is a background job, add to the job table
     if(!currentJob->isfg() ){
         jobToBG();
-    }else{
-        // Need to make sure job wasn't sent to background
-        while((pid = waitpid(-cpgid, &status, WUNTRACED)) > 0){
-            if(WIFSIGNALED(status) || WIFSTOPPED(status)){
-                updateStatus(status, pid);
-                return;
-            }
+        return;
+    }
+
+    int status, pid;
+    int cpgid = currentJob->getpgid();
+
+    // Wait for all processes of child process group to finish
+    while((pid = waitpid(-cpgid, &status, WUNTRACED)) > 0){
+
+        // Job recieved a signal, all processes must have recieved it
+        if(WIFSIGNALED(status) || WIFSTOPPED(status)){
+            updateStatus(status, pid);
+            return;
         }
     }
 }
 
 void Yash::jobsExec(){
 
+    // loop through all background jobs
     for(auto job = bgJobs.begin(); job != bgJobs.end(); job++){
         // For the last element, print +
         if(next(job) == bgJobs.end()){
@@ -200,8 +218,11 @@ void Yash::jobsExec(){
  * that is stopped or running, and sending a SIGCONT
  */
 bool Yash::fgExec(){
+
+    // get next background job that is running or stopped
     int next = getNextJob(true);
 
+    // if there is a background job, make it new current job
     if(next > 0){
         currentJob = move(bgJobs[next]);
         removeBGJob(next);
@@ -217,14 +238,21 @@ bool Yash::fgExec(){
     return false;
 }
 
+// Send sigcont to next stopped job in the background
 void Yash::bgExec(){
+
+    // get next stopped jobs in the background
     int next = getNextJob(false);
 
     if(next > 0){
         killpg(bgJobs[next]->getpgid(), SIGCONT);
         bgJobs[next]->setStatus(RUNNING);
+
+        // print job with + or -
         if(next == bgJobs.rbegin()->first){
             bgJobs[next]->printJob(true, next);
+        }else{
+            bgJobs[next]->printJob(false, next);
         }
         return;
     }
@@ -258,10 +286,12 @@ void Yash::jobToBG() {
     // if bgJobs isn't empty, jobNo = max + 1
     int jobNo = (bgJobs.empty()) ? 1 : bgJobs.rbegin()->first + 1;
 
+    // update bgJobPidMap and bgJobs
     bgJobPidMap[currentJob->getpgid()] = jobNo;
     bgJobs[jobNo] = move(currentJob);
 }
 
+// update status of job
 void Yash::updateStatus(int status, int pid) {
     if (WIFEXITED(status)) {
         jobExited(pid);

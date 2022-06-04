@@ -23,22 +23,17 @@ private:
     int pgid {0};
     bool fg {true};
     Status status {RUNNING};
-//    int jobNo {0};
-    bool next {true}; // If current job or next job for fg
 
 public:
     std::vector<std::unique_ptr<Process>> procs;
 
     Job(std::string);
     void createProcs();
-    void printProcs();
+    [[maybe_unused]]void printProcs();
     bool isfg();
     int getpgid();
-//    int getJobNo();
     Status getStatus();
     void setpg(int, int);
-//    void setJobNo(int);
-    void setNext(bool);
     void setStatus(Status);
     void setfg(bool);
     std::string getcmd();
